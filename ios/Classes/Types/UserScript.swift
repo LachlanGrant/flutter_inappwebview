@@ -8,13 +8,20 @@
 import Foundation
 import WebKit
 
+class DummyUserWorld : NSObject {}
+
 public class UserScript : WKUserScript {
     var groupName: String?
-    @available(iOS 14.0, *)
-    lazy var contentWorld: WKContentWorld = WKContentWorld.page
+    var contentWorld: NSObject?
     
     public override init(source: String, injectionTime: WKUserScriptInjectionTime, forMainFrameOnly: Bool) {
         super.init(source: source, injectionTime: injectionTime, forMainFrameOnly: forMainFrameOnly)
+        
+        if #available(iOS 14.0, *) {
+            self.contentWorld = WKContentWorld.page
+        } else {
+            self.contentWorld = DummyUserWorld()
+        }
     }
     
     public init(groupName: String?, source: String, injectionTime: WKUserScriptInjectionTime, forMainFrameOnly: Bool) {
